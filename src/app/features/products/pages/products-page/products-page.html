@@ -1,1 +1,113 @@
-<p>products-page works!</p>
+<section class="page">
+  <header class="page-header">
+    <div>
+      <h1 class="title">Produktdaten</h1>
+      <p class="subtitle">Übersicht aller Tarife und Preisbestandteile</p>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- Karte 1: Tarifliste -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Tarifliste</div>
+          <div class="card-subtitle">Aktive und verfügbare Produkte mit Konditionen</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Produkt-ID</th>
+              <th>Tarifname</th>
+              <th>Sparte</th>
+              <th>Zielgruppe</th>
+              <th>Grundpreis/Monat</th>
+              <th>Arbeitspreis</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+  <tr
+    *ngFor="let p of products"
+    (click)="selectProduct(p)"
+    [class.selected]="p.id === selectedProduct.id"
+  >
+    <td>{{ p.id }}</td>
+    <td>{{ p.name }}</td>
+    <td>{{ p.commodity }}</td>
+    <td>{{ p.targetGroup }}</td>
+    <td>{{ p.basePriceMonthlyEur.toFixed(2).replace('.', ',') }} €</td>
+    <td>{{ p.workPriceCtPerKwh.toFixed(2).replace('.', ',') }} ct/kWh</td>
+    <td>
+      <span
+        class="pill"
+        [class.pill-active]="isActive(p)"
+        [class.pill-inactive]="!isActive(p)"
+      >
+        {{ p.status }}
+      </span>
+    </td>
+  </tr>
+</tbody>
+
+        </table>
+      </div>
+    </div>
+
+    <!-- Karte 2: Tarifdetails -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Tarifdetails – {{ selectedProduct.id }}</div>
+          <div class="card-subtitle">Preisbestandteile, Laufzeit und Gültigkeit</div>
+        </div>
+      </div>
+
+      <div class="details">
+        <div class="detail">
+          <div class="label">Tarifname</div>
+          <div class="value">{{ selectedProduct.name }}</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Sparte / Zielgruppe</div>
+          <div class="value">{{ selectedProduct.commodity }} / {{ selectedProduct.targetGroup }}</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Grundpreis</div>
+          <div class="value">{{ selectedProduct.basePriceMonthlyEur.toFixed(2).replace('.', ',') }} € / Monat</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Arbeitspreis</div>
+          <div class="value">{{ selectedProduct.workPriceCtPerKwh.toFixed(2).replace('.', ',') }} ct/kWh</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Mindestlaufzeit</div>
+          <div class="value">{{ selectedProduct.contractTermMonths }} Monate</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Kündigungsfrist</div>
+          <div class="value">{{ selectedProduct.noticePeriodWeeks }} Wochen</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Öko-Option</div>
+          <div class="value">{{ selectedProduct.isGreen ? 'Ja' : 'Nein' }}</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Gültig ab</div>
+          <div class="value">{{ selectedProduct.validFrom }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

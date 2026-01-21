@@ -1,2 +1,95 @@
-<h1>Kundendaten</h1>
+<section class="page">
+  <header class="page-header">
+    <div>
+      <h1 class="title">Kundendaten</h1>
+      <p class="subtitle">Übersicht aller registrierten Kunden</p>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- Karte 1: Kundenliste -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Kundenliste</div>
+          <div class="card-subtitle">Aktuelle Kundenübersicht mit Verbrauchsdaten</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Kunden-ID</th>
+              <th>Name</th>
+              <th>Verbrauch/Jahr</th>
+              <th>Tarif</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+  <tr
+    *ngFor="let c of customers"
+    (click)="selectCustomer(c)"
+    [class.selected]="c.id === selectedCustomer.id"
+  >
+    <td>{{ c.id }}</td>
+    <td>{{ c.displayName }}</td>
+    <td>{{ c.annualConsumptionKwh.toLocaleString('de-DE') }} kWh</td>
+    <td>{{ c.tariff }}</td>
+    <td>
+      <span
+        class="pill"
+        [class.pill-active]="isActive(c)"
+        [class.pill-inactive]="!isActive(c)"
+      >
+        {{ c.status }}
+      </span>
+    </td>
+  </tr>
+</tbody>
+
+        </table>
+      </div>
+    </div>
+
+    <!-- Karte 2: Kundendetails -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Kundendetails – {{ selectedCustomer.id }}</div>
+          <div class="card-subtitle">Detaillierte Informationen und Kontaktdaten</div>
+        </div>
+      </div>
+
+      <div class="details">
+        <div class="detail">
+          <div class="label">Vollständiger Name</div>
+          <div class="value">{{ selectedCustomer.fullName }}</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">E-Mail</div>
+          <div class="value">{{ selectedCustomer.email }}</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Telefon</div>
+          <div class="value">{{ selectedCustomer.phone }}</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Adresse</div>
+          <div class="value">{{ selectedCustomer.address }}</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Kunde seit</div>
+          <div class="value">{{ selectedCustomer.customerSince }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 

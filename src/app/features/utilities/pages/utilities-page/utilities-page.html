@@ -1,1 +1,103 @@
-<p>utilities-page works!</p>
+<section class="page">
+  <header class="page-header">
+    <div>
+      <h1 class="title">Stadtwerkdaten</h1>
+      <p class="subtitle">Kernkennzahlen für Vertrieb und Finanzen</p>
+    </div>
+  </header>
+
+  <!-- KPI-Grid -->
+  <!-- KPI-Grid -->
+<div class="kpi-grid">
+  <div class="kpi card" *ngFor="let k of kpis">
+    <div class="kpi-label">{{ k.label }}</div>
+    <div class="kpi-value">{{ k.value }}</div>
+    <div class="kpi-meta">{{ k.meta }}</div>
+  </div>
+</div>
+
+  <!-- Vorgänge / Offene Posten -->
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Offene Vorgänge</div>
+          <div class="card-subtitle">Beispielhafte Fälle aus Forderungen und Klärungen</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Case-ID</th>
+              <th>Kunde</th>
+              <th>Betrag</th>
+              <th>Fällig seit</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+  <tr
+    *ngFor="let c of cases"
+    (click)="selectCase(c)"
+    [class.selected]="c.id === selectedCase.id"
+  >
+    <td>{{ c.id }}</td>
+    <td>{{ c.customerRef }}</td>
+    <td>{{ c.amountEur.toFixed(2).replace('.', ',') }} €</td>
+    <td>{{ c.overdueDays }} Tage</td>
+    <td>
+      <span
+        class="pill"
+        [class.pill-active]="isOpen(c)"
+        [class.pill-inactive]="!isOpen(c)"
+      >
+        {{ c.status }}
+      </span>
+    </td>
+  </tr>
+</tbody>
+
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Vorgangsdetails – {{ selectedCase.id }}</div>
+          <div class="card-subtitle">Zusammenfassung und nächste Schritte</div>
+        </div>
+      </div>
+
+      <div class="details">
+        <div class="detail">
+          <div class="label">Kunde</div>
+          <div class="value">{{ selectedCase.customerRef }}</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Betrag</div>
+          <div class="value">{{ selectedCase.amountEur.toFixed(2).replace('.', ',') }} €</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Fällig seit</div>
+          <div class="value">{{ selectedCase.overdueDays }} Tage</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Status</div>
+          <div class="value">{{ selectedCase.status }}</div>
+        </div>
+
+        <div class="detail">
+          <div class="label">Nächster Schritt</div>
+          <div class="value">{{ selectedCase.nextStep }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
