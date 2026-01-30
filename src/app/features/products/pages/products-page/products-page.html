@@ -30,29 +30,28 @@
             </tr>
           </thead>
           <tbody>
-  <tr
-    *ngFor="let p of products"
-    (click)="selectProduct(p)"
-    [class.selected]="p.id === selectedProduct.id"
-  >
-    <td>{{ p.id }}</td>
-    <td>{{ p.name }}</td>
-    <td>{{ p.commodity }}</td>
-    <td>{{ p.targetGroup }}</td>
-    <td>{{ p.basePriceMonthlyEur.toFixed(2).replace('.', ',') }} €</td>
-    <td>{{ p.workPriceCtPerKwh.toFixed(2).replace('.', ',') }} ct/kWh</td>
-    <td>
-      <span
-        class="pill"
-        [class.pill-active]="isActive(p)"
-        [class.pill-inactive]="!isActive(p)"
-      >
-        {{ p.status }}
-      </span>
-    </td>
-  </tr>
-</tbody>
-
+            <tr
+              *ngFor="let p of products"
+              (click)="selectProduct(p)"
+              [class.selected]="p.id === selectedProduct?.id"
+            >
+              <td>{{ p.id }}</td>
+              <td>{{ p.name }}</td>
+              <td>{{ p.commodity }}</td>
+              <td>{{ p.targetGroup }}</td>
+              <td>{{ p.basePriceMonthlyEur.toFixed(2).replace('.', ',') }} €</td>
+              <td>{{ p.workPriceCtPerKwh.toFixed(2).replace('.', ',') }} ct/kWh</td>
+              <td>
+                <span
+                  class="pill"
+                  [class.pill-active]="isActive(p)"
+                  [class.pill-inactive]="!isActive(p)"
+                >
+                  {{ p.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
@@ -60,54 +59,60 @@
     <!-- Karte 2: Tarifdetails -->
     <div class="card">
       <div class="card-header">
-        <div>
-          <div class="card-title">Tarifdetails – {{ selectedProduct.id }}</div>
+        <div *ngIf="selectedProduct as sp; else loading">
+          <div class="card-title">Tarifdetails – {{ sp.id }}</div>
           <div class="card-subtitle">Preisbestandteile, Laufzeit und Gültigkeit</div>
         </div>
+
+        <ng-template #loading>
+          <div class="card-title">Tarifdetails</div>
+          <div class="card-subtitle">Lade Daten…</div>
+        </ng-template>
       </div>
 
-      <div class="details">
+      <div class="details" *ngIf="selectedProduct as sp">
         <div class="detail">
           <div class="label">Tarifname</div>
-          <div class="value">{{ selectedProduct.name }}</div>
+          <div class="value">{{ sp.name }}</div>
         </div>
 
         <div class="detail">
           <div class="label">Sparte / Zielgruppe</div>
-          <div class="value">{{ selectedProduct.commodity }} / {{ selectedProduct.targetGroup }}</div>
+          <div class="value">{{ sp.commodity }} / {{ sp.targetGroup }}</div>
         </div>
 
         <div class="detail">
           <div class="label">Grundpreis</div>
-          <div class="value">{{ selectedProduct.basePriceMonthlyEur.toFixed(2).replace('.', ',') }} € / Monat</div>
+          <div class="value">
+            {{ sp.basePriceMonthlyEur.toFixed(2).replace('.', ',') }} € / Monat
+          </div>
         </div>
 
         <div class="detail">
           <div class="label">Arbeitspreis</div>
-          <div class="value">{{ selectedProduct.workPriceCtPerKwh.toFixed(2).replace('.', ',') }} ct/kWh</div>
+          <div class="value">{{ sp.workPriceCtPerKwh.toFixed(2).replace('.', ',') }} ct/kWh</div>
         </div>
 
         <div class="detail">
           <div class="label">Mindestlaufzeit</div>
-          <div class="value">{{ selectedProduct.contractTermMonths }} Monate</div>
+          <div class="value">{{ sp.contractTermMonths }} Monate</div>
         </div>
 
         <div class="detail">
           <div class="label">Kündigungsfrist</div>
-          <div class="value">{{ selectedProduct.noticePeriodWeeks }} Wochen</div>
+          <div class="value">{{ sp.noticePeriodWeeks }} Wochen</div>
         </div>
 
         <div class="detail">
           <div class="label">Öko-Option</div>
-          <div class="value">{{ selectedProduct.isGreen ? 'Ja' : 'Nein' }}</div>
+          <div class="value">{{ sp.isGreen ? 'Ja' : 'Nein' }}</div>
         </div>
 
         <div class="detail">
           <div class="label">Gültig ab</div>
-          <div class="value">{{ selectedProduct.validFrom }}</div>
+          <div class="value">{{ sp.validFrom }}</div>
         </div>
       </div>
     </div>
   </div>
 </section>
-
