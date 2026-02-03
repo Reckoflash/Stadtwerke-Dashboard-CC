@@ -30,9 +30,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "styles": ["src/styles.scss"]
           },
           "configurations": {
             "production": {
@@ -48,12 +46,18 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "define": {
+                "API_BASE_URL": "\"https://stadtwerke-dashboard-cc.onrender.com/api\""
+              }
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "define": {
+                "API_BASE_URL": "\"http://localhost:3000/api\""
+              }
             }
           },
           "defaultConfiguration": "production"

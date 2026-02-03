@@ -8,7 +8,7 @@ import { CaseItem, Kpi } from './models';
   providedIn: 'root',
 })
 export class UtilitiesService {
-  private readonly apiBaseUrl = 'http://localhost:3000/api';
+  private readonly apiBaseUrl = '/api';
 
   constructor(private http: HttpClient) {}
 
