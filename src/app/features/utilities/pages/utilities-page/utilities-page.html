@@ -1,39 +1,52 @@
 <section class="page">
+  <!-- Page Header -->
   <header class="page-header">
     <div>
-      <h1 class="title">Stadtwerkdaten</h1>
-      <p class="subtitle">Kernkennzahlen für Vertrieb und Finanzen</p>
+      <h1 class="title">Service &amp; Finance Cockpit</h1>
+      <p class="subtitle">Arbeitsvorräte, Klärfälle, offene Posten und operative Kennzahlen</p>
     </div>
   </header>
 
-  <!-- KPI-Grid -->
-  <!-- KPI-Grid -->
-  <div class="kpi-grid">
-    <div class="kpi card" *ngFor="let k of kpis">
-      <div class="kpi-label">{{ k.label }}</div>
-      <div class="kpi-value">{{ k.value }}</div>
-      <div class="kpi-meta">{{ k.meta }}</div>
-    </div>
-  </div>
-
-  <!-- Vorgänge / Offene Posten -->
   <div class="grid">
+    <!-- Card 1: KPIs (Kachel-Übersicht) -->
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">Offene Vorgänge</div>
-          <div class="card-subtitle">Beispielhafte Fälle aus Forderungen und Klärungen</div>
+          <div class="card-title">KPIs</div>
+          <div class="card-subtitle">
+            Operative Kennzahlen (täglich/rolling) für Service und Forderungsmanagement
+          </div>
         </div>
       </div>
 
+      <!-- KPI Grid -->
+      <div class="kpi-grid">
+        <div class="kpi card" *ngFor="let k of kpis">
+          <div class="kpi-label">{{ k.label }}</div>
+          <div class="kpi-value">{{ k.value }}</div>
+          <div class="kpi-meta">{{ k.meta }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Worklist (Tabelle) -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Worklist · Service / OP / Klärfälle</div>
+          <div class="card-subtitle">Priorisierte Bearbeitungsliste (Auszug)</div>
+        </div>
+      </div>
+
+      <!-- Worklist Tabelle -->
       <div class="table-wrap">
         <table class="table">
           <thead>
             <tr>
-              <th>Case-ID</th>
-              <th>Kunde</th>
+              <th>Fall-ID</th>
+              <th>Referenz</th>
               <th>Betrag</th>
-              <th>Fällig seit</th>
+              <th>Überfällig</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -60,47 +73,68 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Hinweis -->
+      <div class="section-title">Hinweis</div>
+      <p class="section-hint">
+        “Offen” = Bearbeitung/Einzug notwendig · “In Klärung” = z. B. Rechnung, Zuordnung oder
+        Ratenplan wird geprüft
+      </p>
     </div>
 
+    <!-- Card 3: Vorgangsdetails (Detailkarte) -->
     <div class="card">
       <div class="card-header">
-        <div *ngIf="selectedCase as sc; else loading">
+        <div *ngIf="selectedCase as sc; else loadingCase">
           <div class="card-title">Vorgangsdetails – {{ sc.id }}</div>
-          <div class="card-subtitle">Zusammenfassung und nächste Schritte</div>
+          <div class="card-subtitle">Zusammenfassung und nächster Schritt</div>
         </div>
 
-        <ng-template #loading>
+        <!-- Loading State -->
+        <ng-template #loadingCase>
           <div class="card-title">Vorgangsdetails</div>
           <div class="card-subtitle">Lade Daten…</div>
         </ng-template>
       </div>
 
-      <div class="details" *ngIf="selectedCase as sc">
-        <div class="detail">
-          <div class="label">Kunde</div>
-          <div class="value">{{ sc.customerRef }}</div>
+      <ng-container *ngIf="selectedCase as sc">
+        <!-- Section: Übersicht -->
+        <div class="section-title">Übersicht</div>
+        <p class="section-hint">Kurzsicht auf den ausgewählten Vorgang</p>
+
+        <div class="details">
+          <div class="detail">
+            <div class="label">Referenz</div>
+            <div class="value">{{ sc.customerRef }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Betrag</div>
+            <div class="value">{{ sc.amountEur.toFixed(2).replace('.', ',') }} €</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Überfällig</div>
+            <div class="value">{{ sc.overdueDays }} Tage</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Status</div>
+            <div class="value">{{ sc.status }}</div>
+          </div>
         </div>
 
-        <div class="detail">
-          <div class="label">Betrag</div>
-          <div class="value">{{ sc.amountEur.toFixed(2).replace('.', ',') }} €</div>
-        </div>
+        <!-- Section: Nächster Schritt -->
+        <div class="section-title">Nächster Schritt</div>
+        <p class="section-hint">Operative Aktion / To-do</p>
 
-        <div class="detail">
-          <div class="label">Fällig seit</div>
-          <div class="value">{{ sc.overdueDays }} Tage</div>
+        <div class="details">
+          <div class="detail full">
+            <div class="label">Empfehlung</div>
+            <div class="value">{{ sc.nextStep }}</div>
+          </div>
         </div>
-
-        <div class="detail">
-          <div class="label">Status</div>
-          <div class="value">{{ sc.status }}</div>
-        </div>
-
-        <div class="detail">
-          <div class="label">Nächster Schritt</div>
-          <div class="value">{{ sc.nextStep }}</div>
-        </div>
-      </div>
+      </ng-container>
     </div>
   </div>
 </section>

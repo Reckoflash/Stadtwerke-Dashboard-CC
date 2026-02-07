@@ -1,0 +1,199 @@
+<section class="page">
+  <!-- Page Header -->
+  <header class="page-header">
+    <div>
+      <h1 class="title">Lokation &amp; Messwesen</h1>
+      <p class="subtitle">
+        Technische Sicht: Lieferstelle (MaLo), Messpunkt (MeLo), Zähler &amp; Zählerstände
+      </p>
+    </div>
+  </header>
+
+  <div class="grid grid--split">
+    <!-- Card 1: Marktlokationen (MaLo) – Liste -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Marktlokationen (MaLo)</div>
+          <div class="card-subtitle">Übersicht aller Lieferstellen inkl. Verknüpfungen</div>
+        </div>
+      </div>
+
+      <!-- MaLo Liste Tabelle -->
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>MaLo-ID</th>
+              <th>Adresse</th>
+              <th>Sparte</th>
+              <th>Status</th>
+              <th>Aktiver Vertrag</th>
+              <th>Geschäftspartner</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr
+              *ngFor="let m of malos"
+              (click)="selectMalo(m)"
+              [class.selected]="m.id === selectedMalo?.id"
+            >
+              <td>{{ m.id }}</td>
+              <td>{{ m.address }}</td>
+              <td>{{ m.commodity }}</td>
+              <td>
+                <span
+                  class="pill"
+                  [class.pill-active]="m.status === 'Aktiv'"
+                  [class.pill-inactive]="m.status !== 'Aktiv'"
+                >
+                  {{ m.status }}
+                </span>
+              </td>
+
+              <td>{{ m.activeContract?.id || '—' }}</td>
+
+              <td>{{ m.partner?.id || '—' }} · {{ m.partner?.name || '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mini-Glossar (entfernt) -->
+      <div class="section-title"></div>
+    </div>
+
+    <!-- Card 2: Lokationsdetails – MaLo {ID} -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Lokationsdetails – MaLo {{ selectedMalo?.id || '…' }}</div>
+          <div class="card-subtitle">Verknüpfungen &amp; Messobjekte zur ausgewählten MaLo</div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="selectedMalo as m; else loading">
+        <!-- Section: Basisdaten -->
+        <div class="section-title">Basisdaten</div>
+        <p class="section-hint">Stammdaten der Marktlokation</p>
+
+        <div class="details">
+          <div class="detail">
+            <div class="label">MaLo-ID</div>
+            <div class="value">{{ m.id }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Adresse</div>
+            <div class="value">{{ m.address }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Sparte</div>
+            <div class="value">{{ m.commodity }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Status</div>
+            <div class="value">{{ m.status }}</div>
+          </div>
+        </div>
+
+        <!-- Section: Zuordnung -->
+        <div class="section-title">Zuordnung</div>
+        <p class="section-hint">Geschäftspartner und aktiver Vertrag</p>
+
+        <div class="details">
+          <div class="detail">
+            <div class="label">Geschäftspartner</div>
+            <div class="value">
+              <ng-container *ngIf="m.partner as p; else noPartner">
+                {{ p.id }} · {{ p.name }}
+              </ng-container>
+              <ng-template #noPartner>—</ng-template>
+            </div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Aktiver Vertrag</div>
+            <div class="value">
+              <ng-container *ngIf="m.activeContract as ac; else noContract">
+                {{ ac.id }} · {{ ac.product.id }} · {{ ac.product.name }} · Start {{ ac.startDate }}
+              </ng-container>
+              <ng-template #noContract>—</ng-template>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Messpunkt -->
+        <div class="section-title">Messpunkt</div>
+        <p class="section-hint">Messlokation (MeLo) und Messart</p>
+
+        <div class="details">
+          <div class="detail">
+            <div class="label">MeLo-ID</div>
+            <div class="value">{{ m.meter.meloId }}</div>
+          </div>
+
+          <div class="detail" *ngIf="m.meter.measurementType">
+            <div class="label">Messart</div>
+            <div class="value">{{ m.meter.measurementType }}</div>
+          </div>
+        </div>
+
+        <!-- Section: Zähler & Gerät -->
+        <div class="section-title">Zähler &amp; Gerät</div>
+        <p class="section-hint">Zählernummer, Gerätetyp und Einbauinformationen</p>
+
+        <div class="details">
+          <div class="detail">
+            <div class="label">Zählernummer</div>
+            <div class="value">{{ m.meter.meterNumber }}</div>
+          </div>
+
+          <div class="detail" *ngIf="m.meter.meterType">
+            <div class="label">Gerätetyp</div>
+            <div class="value">{{ m.meter.meterType }}</div>
+          </div>
+
+          <div class="detail" *ngIf="m.meter.installDate">
+            <div class="label">Einbaudatum</div>
+            <div class="value">{{ m.meter.installDate }}</div>
+          </div>
+
+          <div class="detail" *ngIf="m.meter.register">
+            <div class="label">Register</div>
+            <div class="value">{{ m.meter.register }}</div>
+          </div>
+        </div>
+
+        <!-- Section: Letzter Zählerstand -->
+        <div class="section-title">Letzter Zählerstand</div>
+        <p class="section-hint">Letzte bekannte Messung inkl. Erfassungsart</p>
+
+        <div class="details">
+          <div class="detail">
+            <div class="label">Datum</div>
+            <div class="value">{{ m.meter.readingDate }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Stand</div>
+            <div class="value">{{ m.meter.readingValue }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Erfassungsart</div>
+            <div class="value">{{ m.meter.readingType }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Loading State -->
+      <ng-template #loading>
+        <div class="subtitle">Lade Daten...</div>
+      </ng-template>
+    </div>
+  </div>
+</section>

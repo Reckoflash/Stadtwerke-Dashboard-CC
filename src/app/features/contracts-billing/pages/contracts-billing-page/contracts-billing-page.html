@@ -1,0 +1,227 @@
+<section class="page">
+  <!-- Page Header -->
+  <header class="page-header">
+    <div>
+      <h1 class="title">Verträge &amp; Abrechnung</h1>
+      <p class="subtitle">Vertrag, Abschlag, Rechnungen, offene Posten (OP), Zahlungen</p>
+    </div>
+  </header>
+
+  <div class="grid grid--split">
+    <!-- Card 1: Vertragsliste (Übersicht) -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Vertragsliste</div>
+          <div class="card-subtitle">Aktive und beendete Lieferverträge</div>
+        </div>
+      </div>
+
+      <!-- Vertragsliste Tabelle -->
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>VT-Nr.</th>
+              <th>Geschäftspartner</th>
+              <th>MaLo-ID</th>
+              <th>Sparte</th>
+              <th>Produkt</th>
+              <th>Start / Ende</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr
+              *ngFor="let c of contracts"
+              (click)="selectContract(c)"
+              [class.selected]="c.id === selectedContract?.id"
+            >
+              <td>{{ c.id }}</td>
+              <td>{{ c.partner.id }} · {{ c.partner.name }}</td>
+              <td>{{ c.maloId }}</td>
+              <td>{{ c.commodity }}</td>
+              <td>{{ c.product.id }} · {{ c.product.name }}</td>
+              <td>
+                {{ c.startDate }} /
+                <span *ngIf="c.endDate; else noEnd">{{ c.endDate }}</span>
+                <ng-template #noEnd>—</ng-template>
+              </td>
+              <td>
+                <span
+                  class="pill"
+                  [class.pill-active]="c.status === 'Aktiv'"
+                  [class.pill-inactive]="c.status !== 'Aktiv'"
+                >
+                  {{ c.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Card 2: Vertragsdetails (Detailkarte) -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Vertragsdetails – {{ selectedContract?.id || '…' }}</div>
+          <div class="card-subtitle">
+            Vereinbarung &amp; Abrechnungssicht zum ausgewählten Vertrag
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State (TemplateRef muss existieren -> Name loadingTpl) -->
+      <ng-template #loadingTpl>
+        <div class="subtitle">Lade Daten...</div>
+      </ng-template>
+
+      <!-- ✅ Alias sc: ab hier ist sc garantiert NICHT null -->
+      <ng-container *ngIf="selectedContract as sc; else loadingTpl">
+        <div class="subtitle" *ngIf="loadingDetail">Lade Details...</div>
+
+        <!-- Section: Vertrag -->
+        <div class="section-title">Vertrag</div>
+        <p class="section-hint">Konditionen, Laufzeit und Gültigkeit</p>
+
+        <div class="details">
+          <div class="detail">
+            <div class="label">Status</div>
+            <div class="value">{{ sc.status }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Sparte</div>
+            <div class="value">{{ sc.commodity }}</div>
+          </div>
+
+          <div class="detail full">
+            <div class="label">Produkt (Preisstand)</div>
+            <div class="value">
+              {{ sc.product.id }} · {{ sc.product.name }}
+              <span *ngIf="sc.product.validFrom"> · gültig ab {{ sc.product.validFrom }} </span>
+            </div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Laufzeit / Kündigungsfrist</div>
+            <div class="value">{{ sc.termMonths }} Monate · {{ sc.noticeWeeks }} Wochen</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Lieferbeginn</div>
+            <div class="value">{{ sc.startDate }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Lieferende</div>
+            <div class="value">
+              <span *ngIf="sc.endDate; else noEnd2">{{ sc.endDate }}</span>
+              <ng-template #noEnd2>—</ng-template>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Zuordnung -->
+        <div class="section-title">Zuordnung</div>
+        <p class="section-hint">Geschäftspartner, Lokation und Abrechnungskonto</p>
+
+        <div class="details">
+          <div class="detail full">
+            <div class="label">Geschäftspartner</div>
+            <div class="value">{{ sc.partner.id }} · {{ sc.partner.name }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">MaLo-ID</div>
+            <div class="value">{{ sc.maloId }}</div>
+          </div>
+
+          <div class="detail" *ngIf="sc.accountId">
+            <div class="label">Vertragskonto (VK)</div>
+            <div class="value">{{ sc.accountId }}</div>
+          </div>
+        </div>
+
+        <!-- Section: Abschlag -->
+        <div class="section-title">Abschlag</div>
+        <p class="section-hint">Monatlicher Betrag und Begründung</p>
+
+        <div class="details">
+          <div class="detail">
+            <div class="label">Betrag / Monat</div>
+            <div class="value">{{ eur(sc.installmentEurMonthly) }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Gültig ab</div>
+            <div class="value">{{ sc.installmentValidFrom || '—' }}</div>
+          </div>
+
+          <div class="detail full">
+            <div class="label">Anpassungsgrund</div>
+            <div class="value">{{ sc.installmentReason || '—' }}</div>
+          </div>
+        </div>
+
+        <!-- Section: Offene Posten (OP) -->
+        <div class="section-title">Offene Posten (OP)</div>
+        <p class="section-hint">Aktuelle Forderungen zum Vertrag</p>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>OP-Nr.</th>
+                <th>Betrag</th>
+                <th>Fällig seit</th>
+                <th>Mahnstufe</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let op of sc.openItems">
+                <td>{{ op.opNo }}</td>
+                <td>{{ eur(op.amountEur) }}</td>
+                <td>{{ op.overdueSince }}</td>
+                <td>{{ op.dunningLevel }}</td>
+                <td>{{ op.status }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Section: Letzte Zahlung -->
+        <div class="section-title">Letzte Zahlung</div>
+        <p class="section-hint">Zuletzt verbuchte/unklare Zahlung</p>
+
+        <ng-container *ngIf="sc.lastPayment as lp; else noPayment">
+          <div class="details">
+            <div class="detail">
+              <div class="label">Datum</div>
+              <div class="value">{{ lp.date }}</div>
+            </div>
+
+            <div class="detail">
+              <div class="label">Betrag</div>
+              <div class="value">{{ eur(lp.amountEur) }}</div>
+            </div>
+
+            <div class="detail full">
+              <div class="label">Zahlungsart / Status</div>
+              <div class="value">{{ lp.method }} · {{ lp.status }}</div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #noPayment>
+          <div class="subtitle">Keine Zahlungsinformation vorhanden</div>
+        </ng-template>
+      </ng-container>
+      <!-- ✅ WICHTIG: ng-container wird hier sauber geschlossen -->
+    </div>
+  </div>
+</section>

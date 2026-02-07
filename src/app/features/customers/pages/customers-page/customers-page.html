@@ -1,26 +1,30 @@
 <section class="page">
+  <!-- Page Header -->
   <header class="page-header">
     <div>
-      <h1 class="title">Kundendaten</h1>
-      <p class="subtitle">Übersicht aller registrierten Kunden</p>
+      <h1 class="title">Geschäftspartner</h1>
+      <p class="subtitle">
+        Kaufmännische Stammdaten: Person/Firma, Kommunikation, Einwilligungen, Verknüpfungen
+      </p>
     </div>
   </header>
 
-  <div class="grid">
-    <!-- Karte 1: Kundenliste -->
+  <div class="grid grid--split">
+    <!-- Card 1: Geschäftspartnerliste (Übersicht) -->
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">Kundenliste</div>
-          <div class="card-subtitle">Aktuelle Kundenübersicht mit Verbrauchsdaten</div>
+          <div class="card-title">Geschäftspartnerliste</div>
+          <div class="card-subtitle">Stammdatenübersicht (Auszug)</div>
         </div>
       </div>
 
+      <!-- Geschäftspartnerliste Tabelle -->
       <div class="table-wrap">
         <table class="table">
           <thead>
             <tr>
-              <th>Kunden-ID</th>
+              <th>GP-Nr.</th>
               <th>Name</th>
               <th>Verbrauch/Jahr</th>
               <th>Tarif</th>
@@ -50,48 +54,92 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Hinweis -->
+      <div class="section-title"></div>
     </div>
 
-    <!-- Karte 2: Kundendetails -->
+    <!-- Card 2: Partnerdetails (Detailkarte) -->
     <div class="card">
       <div class="card-header">
-        <div *ngIf="selectedCustomer as sc; else loading">
-          <div class="card-title">Kundendetails – {{ sc.id }}</div>
-          <div class="card-subtitle">Detaillierte Informationen und Kontaktdaten</div>
+        <div *ngIf="selectedCustomer as sc; else loadingCustomer">
+          <div class="card-title">Partnerdetails – {{ sc.id }}</div>
+          <div class="card-subtitle">Kontaktdaten &amp; Basisinformationen</div>
         </div>
 
-        <ng-template #loading>
-          <div class="card-title">Kundendetails</div>
+        <!-- Loading State -->
+        <ng-template #loadingCustomer>
+          <div class="card-title">Partnerdetails</div>
           <div class="card-subtitle">Lade Daten…</div>
         </ng-template>
       </div>
 
-      <div class="details" *ngIf="selectedCustomer as sc">
-        <div class="detail">
-          <div class="label">Vollständiger Name</div>
-          <div class="value">{{ sc.fullName }}</div>
+      <ng-container *ngIf="selectedCustomer as sc">
+        <!-- Section: Übersicht -->
+        <div class="section-title">Übersicht</div>
+        <p class="section-hint">Kurzsicht auf Stammdaten und Status</p>
+
+        <div class="details">
+          <div class="detail">
+            <div class="label">Name (Anzeige)</div>
+            <div class="value">{{ sc.displayName }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Status</div>
+            <div class="value">{{ sc.status }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Kunde seit</div>
+            <div class="value">{{ sc.customerSince }}</div>
+          </div>
         </div>
 
-        <div class="detail">
-          <div class="label">E-Mail</div>
-          <div class="value">{{ sc.email }}</div>
+        <!-- Section: Kontaktdaten -->
+        <div class="section-title">Kontaktdaten</div>
+        <p class="section-hint">Kommunikation und Anschrift</p>
+
+        <div class="details">
+          <div class="detail">
+            <div class="label">Vollständiger Name</div>
+            <div class="value">{{ sc.fullName }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">E-Mail</div>
+            <div class="value">{{ sc.email }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Telefon</div>
+            <div class="value">{{ sc.phone }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Adresse</div>
+            <div class="value">{{ sc.address }}</div>
+          </div>
         </div>
 
-        <div class="detail">
-          <div class="label">Telefon</div>
-          <div class="value">{{ sc.phone }}</div>
-        </div>
+        <!-- Section: Verknüpfungen -->
+        <div class="section-title">Verknüpfungen</div>
+        <p class="section-hint">
+          In dieser Demo nur als “Platzhalter”-Sicht (ohne echte Navigation)
+        </p>
 
-        <div class="detail">
-          <div class="label">Adresse</div>
-          <div class="value">{{ sc.address }}</div>
-        </div>
+        <div class="details">
+          <div class="detail">
+            <div class="label">Tarif / Produkt</div>
+            <div class="value">{{ sc.tariff }}</div>
+          </div>
 
-        <div class="detail">
-          <div class="label">Kunde seit</div>
-          <div class="value">{{ sc.customerSince }}</div>
+          <div class="detail">
+            <div class="label">Jahresverbrauch</div>
+            <div class="value">{{ sc.annualConsumptionKwh.toLocaleString('de-DE') }} kWh</div>
+          </div>
         </div>
-      </div>
+      </ng-container>
     </div>
   </div>
 </section>

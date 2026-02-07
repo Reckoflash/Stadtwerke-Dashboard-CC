@@ -1,13 +1,14 @@
 <section class="page">
   <header class="page-header">
     <div>
-      <h1 class="title">Produktdaten</h1>
-      <p class="subtitle">Übersicht aller Tarife und Preisbestandteile</p>
+      <h1 class="title">Produkte &amp; Tarife</h1>
+      <p class="subtitle">
+        Katalog + Konditionen (Preisstände gültig ab/bis) für Vertrieb und Vertragsabschluss
+      </p>
     </div>
   </header>
 
-  <div class="grid">
-    <!-- Karte 1: Tarifliste -->
+  <div class="grid grid--split">
     <div class="card">
       <div class="card-header">
         <div>
@@ -24,11 +25,12 @@
               <th>Tarifname</th>
               <th>Sparte</th>
               <th>Zielgruppe</th>
-              <th>Grundpreis/Monat</th>
+              <th>Grundpreis / Monat</th>
               <th>Arbeitspreis</th>
               <th>Status</th>
             </tr>
           </thead>
+
           <tbody>
             <tr
               *ngFor="let p of products"
@@ -56,63 +58,87 @@
       </div>
     </div>
 
-    <!-- Karte 2: Tarifdetails -->
+    <!-- Card 2: Tarifdetails -->
     <div class="card">
       <div class="card-header">
-        <div *ngIf="selectedProduct as sp; else loading">
-          <div class="card-title">Tarifdetails – {{ sp.id }}</div>
+        <div>
+          <div class="card-title">Tarifdetails – {{ selectedProduct?.id || '…' }}</div>
           <div class="card-subtitle">Preisbestandteile, Laufzeit und Gültigkeit</div>
         </div>
-
-        <ng-template #loading>
-          <div class="card-title">Tarifdetails</div>
-          <div class="card-subtitle">Lade Daten…</div>
-        </ng-template>
       </div>
 
-      <div class="details" *ngIf="selectedProduct as sp">
-        <div class="detail">
-          <div class="label">Tarifname</div>
-          <div class="value">{{ sp.name }}</div>
-        </div>
+      <ng-container *ngIf="selectedProduct as sp; else loading">
+        <div class="section-title">Produkt</div>
+        <p class="section-hint">Stammdaten und Einordnung</p>
 
-        <div class="detail">
-          <div class="label">Sparte / Zielgruppe</div>
-          <div class="value">{{ sp.commodity }} / {{ sp.targetGroup }}</div>
-        </div>
+        <div class="details">
+          <div class="detail">
+            <div class="label">Tarifname</div>
+            <div class="value">{{ sp.name }}</div>
+          </div>
 
-        <div class="detail">
-          <div class="label">Grundpreis</div>
-          <div class="value">
-            {{ sp.basePriceMonthlyEur.toFixed(2).replace('.', ',') }} € / Monat
+          <div class="detail">
+            <div class="label">Sparte</div>
+            <div class="value">{{ sp.commodity }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Zielgruppe</div>
+            <div class="value">{{ sp.targetGroup }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Status</div>
+            <div class="value">{{ sp.status }}</div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Preisstand gültig ab</div>
+            <div class="value">{{ sp.validFrom }}</div>
           </div>
         </div>
 
-        <div class="detail">
-          <div class="label">Arbeitspreis</div>
-          <div class="value">{{ sp.workPriceCtPerKwh.toFixed(2).replace('.', ',') }} ct/kWh</div>
+        <div class="section-title">Preis</div>
+        <p class="section-hint">Grund- und Arbeitspreis</p>
+
+        <div class="details">
+          <div class="detail">
+            <div class="label">Grundpreis</div>
+            <div class="value">
+              {{ sp.basePriceMonthlyEur.toFixed(2).replace('.', ',') }} € / Monat
+            </div>
+          </div>
+
+          <div class="detail">
+            <div class="label">Arbeitspreis</div>
+            <div class="value">{{ sp.workPriceCtPerKwh.toFixed(2).replace('.', ',') }} ct/kWh</div>
+          </div>
         </div>
 
-        <div class="detail">
-          <div class="label">Mindestlaufzeit</div>
-          <div class="value">{{ sp.contractTermMonths }} Monate</div>
-        </div>
+        <div class="section-title">Konditionen</div>
+        <p class="section-hint">Laufzeit, Kündigung und Öko-Option</p>
 
-        <div class="detail">
-          <div class="label">Kündigungsfrist</div>
-          <div class="value">{{ sp.noticePeriodWeeks }} Wochen</div>
-        </div>
+        <div class="details">
+          <div class="detail">
+            <div class="label">Mindestlaufzeit</div>
+            <div class="value">{{ sp.contractTermMonths }} Monate</div>
+          </div>
 
-        <div class="detail">
-          <div class="label">Öko-Option</div>
-          <div class="value">{{ sp.isGreen ? 'Ja' : 'Nein' }}</div>
-        </div>
+          <div class="detail">
+            <div class="label">Kündigungsfrist</div>
+            <div class="value">{{ sp.noticePeriodWeeks }} Wochen</div>
+          </div>
 
-        <div class="detail">
-          <div class="label">Gültig ab</div>
-          <div class="value">{{ sp.validFrom }}</div>
+          <div class="detail">
+            <div class="label">Öko-Option</div>
+            <div class="value">{{ sp.isGreen ? 'Ja' : 'Nein' }}</div>
+          </div>
         </div>
-      </div>
+      </ng-container>
+
+      <ng-template #loading>
+        <div class="subtitle">Lade Daten...</div>
+      </ng-template>
     </div>
   </div>
 </section>
