@@ -1,19 +1,27 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# --- Build outputs ---
+/dist/
+/tmp/
+/out-tsc/
+/bazel-out/
+/build/
+/public/build/
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# --- Angular / Vite caches ---
+/.angular/
+/.angular/cache/
+/.vite/
+/.vite-cache/
 
-# Node
-/node_modules
+# --- Node ---
+/node_modules/
 node_modules/
 **/node_modules/
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json  # OPTIONAL: nur wenn du bewusst ohne lockfile arbeiten willst (sonst ZEILE LÖSCHEN)
 
-# IDEs and editors
+# --- IDEs / Editors ---
 .idea/
 .project
 .classpath
@@ -22,7 +30,7 @@ yarn-error.log
 .settings/
 *.sublime-workspace
 
-# Visual Studio Code
+# VS Code (allow workspace configs)
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -30,20 +38,19 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
+# --- Tests / Coverage ---
+/coverage/
 testem.log
-/typings
+/libpeerconnection.log
 __screenshots__/
 
-# System files
+# --- System files ---
 .DS_Store
 Thumbs.db
 
-# ENV
+# --- Env / Secrets ---
 .env
+.env.*
+!.env.example
 backend/.env
+backend/.env.*

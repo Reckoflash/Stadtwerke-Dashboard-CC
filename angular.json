@@ -21,6 +21,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "polyfills": ["src/polyfills.ts"],
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -48,7 +49,7 @@
               ],
               "outputHashing": "all",
               "define": {
-                "API_BASE_URL": "\"https://stadtwerke-dashboard-cc.onrender.com/api\""
+                "API_BASE_URL": "\"/api\""
               }
             },
             "development": {
@@ -56,7 +57,7 @@
               "extractLicenses": false,
               "sourceMap": true,
               "define": {
-                "API_BASE_URL": "\"http://localhost:3000/api\""
+                "API_BASE_URL": "\"/api\""
               }
             }
           },
@@ -64,6 +65,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "stadtwerke-dashboard:build:production"
