@@ -47,15 +47,18 @@ app.use(
   cors({
     origin(origin, cb) {
       if (!origin) return cb(null, true);
+
+      // exakt erlaubte Origins
       if (allowedOrigins.includes(origin)) return cb(null, true);
+
+      // optional: Vercel Preview Deployments erlauben
+      if (origin.endsWith('.vercel.app')) return cb(null, true);
+
       return cb(new Error(`CORS blocked: ${origin}`));
     },
-    credentials: true,
+    credentials: false,
   }),
 );
-
-// Preflight explizit
-app.options('*', cors());
 
 // -------------------------
 // DB Runtime Debug (NUR DEV)
