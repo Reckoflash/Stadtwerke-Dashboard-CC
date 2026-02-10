@@ -1,59 +1,48 @@
-# StadtwerkeDashboard
+# Stadtwerke Dashboard (Portfolio)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.3.
+Portfolio-Webapp zur Abbildung zentraler Prozesse eines Versorgers (Geschäftspartner, Lokation/Messwesen, Verträge/Abrechnung, Service & Finance KPIs).
 
-## Development server
+**Live Demo (Frontend):** https://stadtwerke-dashboard-cc.vercel.app  
+**API Health (Backend):** https://stadtwerke-dashboard-cc.onrender.com/api/health
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## Features
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **Geschäftspartner**: Liste + Detail (Stammdaten, Status, Tarif)
+- **Lokation & Messwesen**: MaLo/MeLo-Logik, Zähler/Letzte Ablesung
+- **Verträge & Abrechnung**: Vertragsliste + Detail (Abschlag, OPs, letzte Zahlung)
+- **Service & Finance**: KPI-Übersicht + Case-Liste
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Tech Stack
 
-```bash
-ng generate component component-name
-```
+- Frontend: Angular (TypeScript), HTML, SCSS
+- Backend: Node.js, Express (REST API)
+- DB: MySQL
+- Deployment: Vercel (Frontend), Render (Backend), Railway (MySQL)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## Architektur (kurz)
 
-## Building
+Angular SPA ruft REST-Endpunkte unter `/api/*` auf. Lokal wird das via `proxy.conf.json` auf `http://localhost:3000` weitergeleitet; in Production rewritet Vercel `/api/*` auf das Render-Backend.
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## Local Setup
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Voraussetzungen
 
-## Running unit tests
+- Node.js + npm
+- MySQL (lokal) oder Railway-DB (remote)
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### Backend starten
 
 ```bash
-ng e2e
+cd backend
+npm install
+# .env anlegen (siehe .env.example)
+node server.js
 ```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
